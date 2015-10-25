@@ -1,4 +1,4 @@
-# clj-swipl
+# clj-swipl7
 
 A Clojure library designed to call SWI-Prolog 7 goals directly from clojure code.
 
