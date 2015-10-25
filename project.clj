@@ -1,5 +1,5 @@
-(defproject clj-swipl7 "0.1.1"
-  :description "Clojure SWI-Prolog 7 bridge"
+(defproject clj-swipl7 "0.1.1-SNAPSHOT"
+  :description "A Clojure library designed to call SWI-Prolog 7 goals directly from clojure code"
   :url "https://github.com/feldi/clj-swipl7"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
