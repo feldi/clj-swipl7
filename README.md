@@ -1,6 +1,6 @@
 # clj-swipl
 
-A Clojure library designed to call SWI-Prolog goals directly from clojure code.
+A Clojure library designed to call SWI-Prolog 7 goals directly from clojure code.
 
 If you find it to hard to translate your prolog projects to core.logic, 
 this might be your choice.
