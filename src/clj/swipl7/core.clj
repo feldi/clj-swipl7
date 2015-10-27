@@ -281,6 +281,10 @@
     (println varname " = " (to-clj term))
     )) 
 
+(defn seq-to-term-list
+  "Makes of any sequence a list of terms."
+  [s]
+  (map to-pl s))
 
 ;; Exceptions
 
@@ -365,8 +369,8 @@
   ([] (Variable.))
   ; Create a new Variable with 'name' (which must not be null or ""),
   ; and may one day be constrained to comply with traditional Prolog syntax.
-  ([^String name]
-    (Variable. name)))
+  ([var-name]
+    (Variable. (clojure.string/upper-case (name var-name)))))
 
 (defn new-anon-var
   "Create a new anonymous Variable."
@@ -707,9 +711,10 @@
 ;; Compound
 
 (defn new-compound
-  ([^String name] (new-compound name [(new-empty-list)]))
-  ([^String name terms]
-    (Compound. name ^"[Lorg.jpl7.Term;" (into-array Term terms))))
+  ([^String name] 
+    (Compound. name))
+  ([^String name args]
+    (Compound. name ^"[Lorg.jpl7.Term;" (into-array Term (seq-to-term-list args)))))
 
 ; made proteced
 ;(defn compound-with-arity
