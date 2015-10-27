@@ -49,12 +49,22 @@
 (defn list-nil  [] JPL/LIST_NIL)
 (defn list-pair [] JPL/LIST_PAIR)
 
+
+;; forward declarations
+(declare new-compound term)
+
+
 ;; Helpers
 
 (defn- string-starts-with-upper-case
   [^String s]
    (Character/isUpperCase (.codePointAt s 0))) 
 
+(defn to-keyword
+  [s]
+  (if (keyword? s)
+    s
+    (keyword (.toLowerCase (name s)))))
 
 ;; Protocols
 
@@ -284,7 +294,7 @@
 (defn seq-to-term-list
   "Makes of any sequence a list of terms."
   [s]
-  (map to-pl s))
+  (map term s))
 
 ;; Exceptions
 
@@ -517,8 +527,20 @@
 
 ;; Term
 
-(defn term-to-text
-  "Pretty format a term." 
+(defn term
+  "Convenience method for term construction."
+  ([]
+    ;; anonymous var
+    (new-anon-var))
+  ([s]
+    ;; Atom, Variable or List
+    (to-pl s))
+  ([s1 s2]
+    ;; compound term
+    (new-compound (name s1) s2)))
+
+ (defn term-to-text
+   "Pretty format a term." 
   [^Term term]
   (.toString term))
 
@@ -979,6 +1001,16 @@
       (new-var data) 
       (new-atom data)))
   
+  clojure.lang.Symbol
+  
+  (to-pl [data] 
+    (to-pl (name data)))
+  
+  clojure.lang.Keyword
+  
+  (to-pl [data] 
+    (to-pl (name data)))
+    
   clojure.lang.IPersistentVector
   
   (to-pl [data] 
@@ -1083,7 +1115,7 @@
   
   (to-clj [data] 
     ;; convert Prolog variable names to clojure keywords
-    (zipmap (for [[^String k] data] (keyword (.toLowerCase k)))
+    (zipmap (for [[^String k] data] (to-keyword k))
             (for [[_ v]       data] (to-clj v))))
   
   clojure.lang.PersistentVector
@@ -1184,8 +1216,8 @@
   
   java.util.Map
   
-  (get-val [soln var]
-    (when-let [value (get-raw-val soln var)]
+  (get-val [soln var-name]
+    (when-let [value (get-raw-val soln var-name)]
       (to-clj value)))
   
   (success? [soln]
