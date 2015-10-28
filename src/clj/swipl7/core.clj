@@ -3,6 +3,7 @@
     :doc "A Clojure SWI-Prolog bridge.
           Call prolog goals directly from clojure code."}
   clj.swipl7.core
+  (:require [clojure.string :as str])
   (:import [org.jpl7 JPL Atom Compound JPLException
             PrologException Query Term
             Util Variable JRef Version]
@@ -60,11 +61,15 @@
   [^String s]
    (Character/isUpperCase (.codePointAt s 0))) 
 
-(defn to-keyword
+(defn- keywordize 
   [s]
   (if (keyword? s)
     s
-    (keyword (.toLowerCase (name s)))))
+    (-> (name s) 
+      str/lower-case
+      (str/replace "_" "-")
+      (str/replace "." "-")
+      (keyword))))
 
 ;; Protocols
 
@@ -287,9 +292,13 @@
 (defn show-solution
   "Pretty print a solution hash map."
   [^java.util.Map solution-map]
-  (doseq [[varname term] solution-map]
-    (println varname " = " (to-clj term))
-    )) 
+  (doall(doseq [[varname term] solution-map]
+          (println varname " = "  term)))) 
+
+(defn show-solutions
+  "Pretty print a list of solutions."
+  [solution-list]
+  (doall (doseq [soln solution-list] (show-solution soln))))
 
 (defn seq-to-term-list
   "Makes of any sequence a list of terms."
@@ -839,12 +848,19 @@
   [^Query q]
   (.getSubstWithNameVars q))
 
-(defn get-raw-val 
-  "Returns the 'raw' value of a varaiable."
+(defn get-raw-value 
+  "Returns the 'raw' value of a variable."
   [solution var]
   (if (instance? Variable var)
     (get solution (get-var-name var))
     (get solution var)))
+
+(defn get-clj-value 
+  "Returns the 'clojurized' value of a variable."
+  [solution var]
+  (if (instance? Variable var)
+    (get solution (keywordize (get-var-name var)))
+    (get solution (keywordize var))))
 
 (defn open-query
   [^Query q]
@@ -981,6 +997,7 @@
     (.toString lis))
  )
 
+
 (extend-protocol ICljToPrologConversion
   
   nil
@@ -1066,6 +1083,7 @@
   (to-pl [data] 
     (new-jref data)))
 
+
 (extend-protocol IPrologToCljConversion
   
   nil
@@ -1115,7 +1133,7 @@
   
   (to-clj [data] 
     ;; convert Prolog variable names to clojure keywords
-    (zipmap (for [[^String k] data] (to-keyword k))
+    (zipmap (for [[^String k] data] (keywordize k))
             (for [[_ v]       data] (to-clj v))))
   
   clojure.lang.PersistentVector
@@ -1149,22 +1167,22 @@
     (Query/hasSolution text (into-array Term params)))
   
   (run-q-1 [text]
-    (Query/oneSolution text))
+    (to-clj (Query/oneSolution text)))
   
   (run-q-1-with-params [text params]
-    (Query/oneSolution text (into-array Term params)))
+    (to-clj (Query/oneSolution text (into-array Term params))))
   
   (run-q [text]
-    (vec (Query/allSolutions text)))
+    (to-clj (vec (Query/allSolutions text))))
   
   (run-q-with-params [text params]
-    (vec (Query/allSolutions text (into-array Term params))))
+    (to-clj (vec (Query/allSolutions text (into-array Term params)))))
   
   (run-q-n [text n]
-    (vec (Query/nSolutions text (long n))))
+    (to-clj (vec (Query/nSolutions text (long n)))))
   
   (run-q-n-with-params [text params n]
-    (vec (Query/nSolutions text (into-array Term params) (long n))))
+    (to-clj (vec (Query/nSolutions text (into-array Term params) (long n)))))
   
   org.jpl7.Term
   
@@ -1175,13 +1193,13 @@
     (Query/hasSolution term))
   
   (run-q-1 [term]
-    (Query/oneSolution term))
+    (to-clj (Query/oneSolution term)))
   
   (run-q [term]
-    (vec (Query/allSolutions term)))
+    (to-clj (vec (Query/allSolutions term))))
   
   (run-q-n [term n]
-    (vec (Query/nSolutions term (long n))))
+    (to-clj (vec (Query/nSolutions term (long n)))))
   
   org.jpl7.Query
   
@@ -1189,14 +1207,15 @@
     (.hasSolution q))
   
   (run-q-1 [q]
-    (.oneSolution q))
+    (to-clj (.oneSolution q)))
   
   (run-q [q]
-    (vec (.allSolutions q)))
+    (to-clj (vec (.allSolutions q))))
   
   (run-q-n [q n]
-   (vec (.nSolutions q (long n))))
+    (to-clj (vec (.nSolutions q (long n)))))
 )
+
 
 (extend-protocol IPrologSolution
   
@@ -1216,8 +1235,9 @@
   
   java.util.Map
   
-  (get-val [soln var-name]
-    (when-let [value (get-raw-val soln var-name)]
+  (get-val [soln var]
+    (get-clj-value soln var)
+    #_(when-let [value (get-clj-value soln var)]
       (to-clj value)))
   
   (success? [soln]

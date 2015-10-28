@@ -18,28 +18,28 @@
         atom-ralf (pl/to-pl "ralf")
         query     (pl/new-q-with-params "descendent_of" [var-x atom-ralf])
         solutions (pl/run-q query)]
-    (println "demo-family : all solutions to " (pl/pl-to-text query)  " ==> " 
-             (map pl/pl-to-text solutions))))
+    (println "demo-family : all solutions to " (pl/pl-to-text query)  " ==> ")
+    (pl/show-solutions solutions)))
 
 (defn demo-all-solutions
   []
   (let [query     (pl/new-q "X is 1; X is 2; X is 3")
         solutions (pl/run-q query)]
-    (println "demo-all-solutions: all solutions to " (pl/pl-to-text query)  " ==> " 
-             (map pl/pl-to-text solutions))))
+    (println "demo-all-solutions: all solutions to " (pl/pl-to-text query)  " ==> ")
+    (pl/show-solutions solutions)))
 
 (defn demo-n-solutions
   []
   (let [solutions (pl/run-q-n "X is 1; X is 2; X is 3" 2 )]
-     (println "demo-n-solutions: only first 2 solutions to previous query ==> " 
-             (map pl/pl-to-text solutions))))
+     (println "demo-n-solutions: only first 2 solutions to previous query ==> ") 
+     (pl/show-solutions solutions)))
 
 (defn demo-append
   []
   (let [query    (pl/new-q "append([1, 2, 3], [4, 5], X).")
         solution (pl/run-q-1 query)]
     (println "demo-append / Prolog list processing. Query: " (pl/pl-to-text query)
-             " ==>" (pl/pl-to-text (pl/get-val solution "X")))))
+             " ==>\n" (pl/get-val solution "X"))))
 
 (defn demo-compounds
   []
@@ -52,7 +52,7 @@
          solutions (pl/run-q query)
          counter   (count solutions)]
     (println "demo-compounds: " (pl/pl-to-text query) " has " counter "solutions :" )
-    (doseq [x solutions] (pl/show-solution x) (println))))
+    (pl/show-solutions solutions)))
 
 (defn demo-lists
   []
@@ -70,7 +70,8 @@
         query-with-params (pl/new-q-with-params "X = ?, Y = ? ", [arg1 arg2])
         solution (pl/run-q-1 query-with-params)]
     (println "demo-with-params: query with params: " (pl/pl-to-text query-with-params) 
-             " ==> " (pl/pl-to-text solution))))
+             " ==> ")
+    (pl/show-solution solution)))
 
 (defn demo-get-val
   []
