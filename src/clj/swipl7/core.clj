@@ -226,7 +226,7 @@
   []
   (JPL/getSyntax))
 
-(defn ^boolean tag? 
+#_(defn ^boolean tag? 
   [^String s]
   (JPL/isTag s))
 
