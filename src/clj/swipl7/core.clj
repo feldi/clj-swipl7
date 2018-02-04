@@ -192,6 +192,11 @@
   (JPL/setDefaultInitArgs (into-array String args-list)))
 
 (defn get-actual-init-args
+  "Returns the sequence of command-line arguments
+	 that were actually used when the Prolog engine was formerly initialised.
+	 
+	 This method returns null if the Prolog engine has not yet been
+	 initialised, and thus may be used to test this condition."
   []
   (into [] (JPL/getActualInitArgs)))
 
@@ -225,10 +230,6 @@
 (defn ^String get-syntax 
   []
   (JPL/getSyntax))
-
-#_(defn ^boolean tag? 
-  [^String s]
-  (JPL/isTag s))
 
 (defn ^Term new-jref 
   [o]
@@ -264,7 +265,13 @@
   [list-of-list-of-ints]
   (Util/intArrayArrayToList list-of-list-of-ints))
 
+(defn ^boolean is-pl-list
+  "whether the Term represents a proper list."
+  [term]
+  (Util/isList term))
+
 (defn pl-list-to-length
+  "The length of the proper list which the Term represents, else -1 ."
   [term]
   (Util/listToLength term))
 
@@ -304,6 +311,7 @@
   "Makes of any sequence a list of terms."
   [s]
   (map term s))
+
 
 ;; Exceptions
 
@@ -422,13 +430,9 @@
   [obj]
   (JRef. obj)) 
 
-(defn jref-to-object
+(defn get-object
   [^JRef ref]
-  (.jrefToObject ref))
-
-(defn get-ref
-  [^JRef ref]
-  (.ref ref))
+  (.object ref))
 
 (defn get-jref-pl-type
    "returns the prolog type of a JRef, as 'Prolog.JREF'"
@@ -495,6 +499,7 @@
   [^org.jpl7.Integer i]
   (.typeName i)) 
 
+
 ;; Float
 
 (defn new-float
@@ -552,7 +557,7 @@
    "Pretty format a term." 
   [^Term term]
   (.toString term))
-
+  
 (defn term-list-to-text
   "Pretty format a list of terms." 
   [terms]
@@ -635,10 +640,17 @@
   (.doubleValue term))
 
 (defn is-atom? 
+  "whether this Term is an Atom (of any type)."
   [^Term term]
   (.isAtom term)) 
 
+#_(defn is-atom-of-name-type? 
+   "Tests whether this Term is an Atom with name and type."
+  [^Term term ^String atom-name ^String atom-type]
+  (.isAtomOfNameType term atom-name atom-type)) 
+
 (defn is-compound? 
+  "Tests whether this Term is a Compound."
   [^Term term]
   (.isCompound term)) 
 
@@ -684,13 +696,17 @@
   [^Term term]
   (.isJNull term))
 
-(defn is-j-object?
-  [^Term term]
-  (.isJObject term))
-
 (defn is-j-void?
   [^Term term]
   (.isJVoid term))
+
+(defn is-list-nil?
+  [^Term term]
+  (.isListNil term))
+
+(defn is-list-pair?
+  [^Term term]
+  (.isListPair term))
 
 (defn is-list?
   [term]
@@ -700,8 +716,7 @@
 (defn is-pair?
   [term]
   (has-functor? term pair-functor 2))
-  
-  
+    
 (defn is-and?
   [term]
   (has-functor? term and-functor 2))
@@ -728,15 +743,6 @@
   "Iff term is a prolog list, return a clojure vector of its succcessive members." 
   [^Term term]
   (vec (.toTermArray term))) 
-
-(defn jref-to-object
-  [^JRef jref]
-  (.jrefToObject jref))
-
-(defn ^Term object-to-jref
-  " returns a new Term instance which represents the given object"
-  [^Object obj]
-  (Term/objectToJRef obj))
 
 
 ;; Compound
@@ -1116,7 +1122,7 @@
   org.jpl7.JRef
   
   (to-clj [data]
-    (get-ref data))
+    (get-object data))
     
   ;; TODO
 ;  org.jpl7.Compound

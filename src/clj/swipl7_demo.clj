@@ -30,7 +30,7 @@
 
 (defn demo-n-solutions
   []
-  (let [solutions (pl/run-q-n "X is 1; X is 2; X is 3" 2 )]
+  (let [solutions (pl/run-q-n "X is 1; X is 2; X is 3" 2)]
      (println "demo-n-solutions: only first 2 solutions to previous query ==> ") 
      (pl/show-solutions solutions)))
 
@@ -38,21 +38,21 @@
   []
   (let [query    (pl/new-q "append([1, 2, 3], [4, 5], X).")
         solution (pl/run-q-1 query)]
-    (println "demo-append / Prolog list processing. Query: " (pl/pl-to-text query)
+    (println "demo-append / Prolog list processing. Query: " (pl/pl-to-text (pl/get-goal query))
              " ==>\n" (pl/get-val solution "X"))))
 
 (defn demo-compounds
   []
-   (let [compound  (pl/new-compound "append" [(pl/to-pl "Xs") 
-                                              (pl/to-pl "Ys") 
-                                              (pl/to-pl [(pl/to-pl "a") 
-                                                         (pl/to-pl "b") 
-                                                         (pl/to-pl "c")])])
-         query     (pl/new-q compound)
-         solutions (pl/run-q query)
-         counter   (count solutions)]
-    (println "demo-compounds: " (pl/pl-to-text query) " has " counter "solutions :" )
-    (pl/show-solutions solutions)))
+  (let [compound  (pl/new-compound "append" [(pl/to-pl "Xs") 
+                                             (pl/to-pl "Ys") 
+                                             (pl/to-pl [(pl/to-pl "a") 
+                                                        (pl/to-pl "b") 
+                                                        (pl/to-pl "c")])])
+        query     (pl/new-q compound)
+        solutions (pl/run-q query)
+        counter   (count solutions)]
+   (println "demo-compounds: " (pl/pl-to-text query) " has " counter "solutions :")
+   (pl/show-solutions solutions)))
 
 (defn demo-lists
   []
@@ -85,25 +85,25 @@
 
 (defn demo-lib-version
   []
-   (let [query    (pl/new-q "jpl_pl_lib_version(Version)")
+  (let [query    (pl/new-q "jpl_pl_lib_version(Version)")
         solution (pl/run-q-1 query)]
-    (println "demo-lib-version : JPL version check: prolog jpl library version = "
-                    (pl/get-val solution "Version"  )
-             "; Java jpl library version = " (pl/get-jpl-version-as-string))))
+   (println "demo-lib-version : JPL version check: prolog jpl library version = "
+                   (pl/get-val solution "Version")
+            "; Java jpl library version = " (pl/get-jpl-version-as-string))))
 
 (defn demo-prolog-version-int
   []
-   (let [query   (pl/new-q "current_prolog_flag(version, Version)")
+  (let [query   (pl/new-q "current_prolog_flag(version, Version)")
         solution (pl/run-q-1 query)]
-    (println "demo-prolog-version: prolog version = "  (pl/get-val solution "Version"))))
+   (println "demo-prolog-version: prolog version = "  (pl/get-val solution "Version"))))
 
 (defn demo-prolog-version-data
   []
-   (let [query    (pl/new-q "current_prolog_flag(version_data, Version)")
+  (let [query    (pl/new-q "current_prolog_flag(version_data, Version)")
         solution (pl/run-q-1 query)]
-    (println "demo-prolog-version: prolog version data = "  
-             (pl/compound-to-text(pl/get-val solution "Version"))
-             )))
+   (println "demo-prolog-version: prolog version data = "  
+            (pl/compound-to-text(pl/get-val solution "Version")))))
+             
 
 (defn demo-prolog-exception-1
   []

@@ -6,5 +6,5 @@
   :min-lein-version "2.0.0"
   :resource-paths ["resources"] 
   :dependencies [[org.clojure/clojure "1.8.0"]
-                 [jpl7/jpl7 "7.4.0"]
-                 ])
+                 [jpl7/jpl7 "7.4.0"]])
+                 
