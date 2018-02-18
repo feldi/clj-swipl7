@@ -12,10 +12,10 @@ Be sure you fulfill the JPL 3.x installation prerequisites as desribed unter [ht
 If you want to work yourself on this project, you have to install the SWI-Prolog java bridge jpl.jar in your local maven repository:
 get and install the leiningen plugin 'localrepo',then do:
 
-	lein localrepo install -r 'path to maven repository' 'path-to-swi-prolog'/lib/jpl.jar jpl7/jpl7 7.4.0-alpha
+	lein localrepo install -r 'path to maven repository' 'path-to-swi-prolog'/lib/jpl.jar jpl7/jpl7 7.x.y
 	
 	For example, my private line looks like:
-	lein localrepo install -r d:\maven_repo D:\dev\swiprolog\7.6.0\swipl\lib\jpl.jar jpl7/jpl7 7.4.0-alpha
+	lein localrepo install -r d:\maven_repo D:\dev\swiprolog\7.6.0\swipl\lib\jpl.jar jpl7/jpl7 7.4.0
 
 
 ## Usage

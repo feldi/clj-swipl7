@@ -12,7 +12,8 @@
 
 ; to install the SWI-Prolog java bridge jpl.jar:
 ; get and install the leiningen plugin 'localrepo',
-; then do: lein localrepo install 'path-to-swi-prolog'/lib/jpl.jar jpl7 7.0.1-alpha
+; then do: lein localrepo install 'path-to-swi-prolog'/lib/jpl.jar jpl7 7.4.0 
+; (or whatever version is the latest)
 
 (set! *warn-on-reflection* true)
 
@@ -609,7 +610,7 @@
 (def if-functor "->")
 (def jref-functor "@")
 
-(defn ^Term get-ith-arg
+(defn ^Term get-arg
   "get the ith argument (counting from 1)." 
   [^Term c i]
   (.arg c (long i)))

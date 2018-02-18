@@ -122,13 +122,16 @@
 
 (defn demo-stats
   []
-  (let [query (pl/new-q "statistics")]
+  (let [query (pl/new-q "statistics.")]
     (println "demo-stats : Getting SWI-Prolog statistics. Check console output.")
     (pl/run-q-1 query)))
 
 ;;------------------------------------------------------------------------
 ;; run the demos
 ;;------------------------------------------------------------------------
+
+; this breaks (demo-stats) below!?!
+#_(pl/set-traditional!)
 
 (demo-family)
 (demo-all-solutions)
