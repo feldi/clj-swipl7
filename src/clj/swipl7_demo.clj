@@ -2,8 +2,8 @@
   ^{:author "Peter Feldtmann"
     :doc "Demo code for the Clojure SWI-Prolog bridge."}
   clj.swipl7.demo
-  (:require [clj.swipl7.core :as plc]) 
-  (:use [clj.swipl7.protocols :as pl])
+  (:require [clj.swipl7.core :as plc]
+            [clj.swipl7.protocols :as pl]) 
   (:use clojure.pprint clojure.repl))
 
 #_(pl/set-traditional!)

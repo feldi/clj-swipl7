@@ -22,7 +22,8 @@ get and install the leiningen plugin 'localrepo',then do:
 
 put something like
 ```clojure
-	(:require [clj.swipl7 :as pl])
+	(:require [clj.swipl7.core :as plc]
+              [clj.swipl7.protocols :as pl]) 
 ```
 in your namespace declaration.
 
