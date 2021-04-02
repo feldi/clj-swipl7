@@ -249,7 +249,8 @@
   "Pretty print a solution hash map."
   [^java.util.Map solution-map]
   (doall(doseq [[varname term] solution-map]
-          (println varname " = "  term)))) 
+          (println varname " = "  term)))
+  (println)) 
 
 (defn show-solutions
   "Pretty print a list of solutions."

@@ -7,5 +7,6 @@
   :resource-paths ["resources"] 
   :aot [clj.swipl7.JPLExtend]
   :dependencies [[org.clojure/clojure "1.9.0"]
-                 [jpl7/jpl7 "7.4.0"]])
+                 [jpl7/jpl7 "7.6.1"]
+                 ])
                  

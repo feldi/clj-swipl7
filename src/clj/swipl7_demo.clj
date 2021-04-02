@@ -45,10 +45,10 @@
 (defn demo-compounds
   []
   (let [compound  (plc/new-compound "append" [(pl/to-pl "Xs") 
-                                             (pl/to-pl "Ys") 
-                                             (pl/to-pl [(pl/to-pl "a") 
-                                                        (pl/to-pl "b") 
-                                                        (pl/to-pl "c")])])
+                                              (pl/to-pl "Ys") 
+                                              (pl/to-pl [(pl/to-pl "a") 
+                                                         (pl/to-pl "b") 
+                                                         (pl/to-pl "c")])])
         query     (pl/new-q compound)
         solutions (pl/run-q query)
         counter   (count solutions)]
