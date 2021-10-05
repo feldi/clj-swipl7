@@ -6,7 +6,7 @@
 (deftest jpl-tests
   
   (testing "version"
-           (is (= (get-jpl-version-as-string) "7.0.1-alpha")))
+           (is (= (get-jpl-version-as-string) "7.6.1-stable")))
   
   (testing "prolog lists"
            (let [pl-list (to-pl [(to-pl "a") (to-pl "b") (to-pl "c")])
@@ -16,6 +16,6 @@
              (is (= ["a" "b" "c"] clj-vec))))
   
   (testing "prolog exception"
-           (is (thrown? org.jpl7.PrologException (build-q "p(]."))))
+           (is (thrown? org.jpl7.PrologException (new-q "p(]."))))
   
   )
